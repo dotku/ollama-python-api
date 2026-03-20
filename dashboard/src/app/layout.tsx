@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Auth0Provider } from "@auth0/nextjs-auth0";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,6 +31,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-slate-900 text-slate-200">
         <Auth0Provider>{children}</Auth0Provider>
+        <Analytics />
       </body>
     </html>
   );
