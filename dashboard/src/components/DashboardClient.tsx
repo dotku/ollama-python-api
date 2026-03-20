@@ -27,6 +27,7 @@ interface StatusData {
     online: boolean;
     models: { name: string; size_gb: number }[];
   };
+  api_url?: string;
   usage?: {
     total_requests: number;
     unique_members: number;
@@ -203,7 +204,7 @@ export function DashboardClient() {
         </div>
 
         {/* API Endpoint */}
-        <ApiEndpoint />
+        <ApiEndpoint apiUrl={status?.api_url} />
 
         {/* API Keys */}
         {user && (
@@ -219,10 +220,10 @@ export function DashboardClient() {
   );
 }
 
-function ApiEndpoint() {
+function ApiEndpoint({ apiUrl: apiUrlProp }: { apiUrl?: string }) {
   const t = useTranslations("status");
   const [copied, setCopied] = useState(false);
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const apiUrl = apiUrlProp || (typeof window !== "undefined" ? window.location.origin : "");
 
   const endpoints = [
     { method: "POST", path: "/chat", desc: "Chat (JSON)" },

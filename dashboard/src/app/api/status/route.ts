@@ -16,6 +16,7 @@ export async function GET() {
 
     return NextResponse.json({
       ...status,
+      api_url: process.env.NEXT_PUBLIC_SITE_URL || "",
       usage: {
         ...(status?.usage || {}),
         total_requests: Number(countRow?.total || 0),

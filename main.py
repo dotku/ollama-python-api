@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from fastapi import FastAPI, Depends, HTTPException, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 import requests
 
 load_dotenv(".env.local")
@@ -176,20 +177,58 @@ class ChatRequest(BaseModel):
     model: str = "smollm:latest"
 
 
+@app.get("/chat")
+def chat_get(q: str, model: str = "smollm:latest", request: Request = None, user: dict = Depends(get_current_user)):
+    return _do_chat(q, model, request, user)
+
+
 @app.post("/chat")
-def chat(body: ChatRequest, request: Request, user: dict = Depends(get_current_user)):
+def chat_post(body: ChatRequest, request: Request, user: dict = Depends(get_current_user)):
+    return _do_chat(body.message, body.model, request, user)
+
+
+def _do_chat(message: str, model: str, request: Request, user: dict):
     start = time.time()
     r = requests.post(
         f"{OLLAMA_BASE}/api/generate",
-        json={"model": body.model, "prompt": body.message, "stream": False},
+        json={"model": model, "prompt": message, "stream": False},
     )
     duration = time.time() - start
     result = r.json()
 
     client_ip = request.client.host if request.client else ""
-    _log_request(user, "/chat", body.model, duration, client_ip)
+    _log_request(user, "/chat", model, duration, client_ip)
 
     return {"user": user["user_id"], "tier": user["tier"], "response": result}
+
+
+@app.get("/chat/stream")
+def chat_stream_get(q: str, model: str = "smollm:latest", request: Request = None, user: dict = Depends(get_current_user)):
+    return _do_chat_stream(q, model, request, user)
+
+
+@app.post("/chat/stream")
+def chat_stream_post(body: ChatRequest, request: Request, user: dict = Depends(get_current_user)):
+    return _do_chat_stream(body.message, body.model, request, user)
+
+
+def _do_chat_stream(message: str, model: str, request: Request, user: dict):
+    start = time.time()
+    client_ip = request.client.host if request.client else ""
+
+    def generate():
+        r = requests.post(
+            f"{OLLAMA_BASE}/api/generate",
+            json={"model": model, "prompt": message, "stream": True},
+            stream=True,
+        )
+        for line in r.iter_lines():
+            if line:
+                yield line + b"\n"
+        duration = time.time() - start
+        _log_request(user, "/chat/stream", model, duration, client_ip)
+
+    return StreamingResponse(generate(), media_type="application/x-ndjson")
 
 
 # --- API Key Management (called by dashboard) ---

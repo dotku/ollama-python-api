@@ -1,10 +1,8 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { NavBar } from "./NavBar";
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 function CodeBlock({ children }: { children: string }) {
   return (
@@ -79,6 +77,18 @@ function Label({ children }: { children: React.ReactNode }) {
 
 export function DocsClient() {
   const t = useTranslations();
+  const [API_URL, setApiUrl] = useState("");
+
+  useEffect(() => {
+    fetch("/api/status")
+      .then((r) => r.json())
+      .then((data) => {
+        setApiUrl(data.api_url || window.location.origin);
+      })
+      .catch(() => {
+        setApiUrl(window.location.origin);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-900">
