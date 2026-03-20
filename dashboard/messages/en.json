@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "title": "Ollama API Dashboard",
+    "description": "Monitor and manage your self-hosted Ollama API server"
+  },
+  "nav": {
+    "signIn": "Sign in",
+    "signOut": "Sign out"
+  },
+  "dashboard": {
+    "title": "Ollama API Dashboard",
+    "subtitle": "Real-time monitoring for your self-hosted Ollama API",
+    "lastUpdated": "Last updated: {time} (auto-refresh 5s)"
+  },
+  "status": {
+    "ollamaStatus": "Ollama Status",
+    "online": "Online",
+    "offline": "Offline",
+    "connecting": "Connecting...",
+    "noModels": "No models loaded",
+    "memory": "Memory",
+    "cpu": "CPU",
+    "uptime": "Server Uptime",
+    "totalRequests": "Total Requests",
+    "anonIps": "{count} anon IPs",
+    "members": "{count} members",
+    "rateLimits": "Rate Limits",
+    "anonymous": "Anonymous",
+    "member": "Member"
+  },
+  "keys": {
+    "title": "API Keys",
+    "created": "New API key created! Copy it now — it won't be shown again.",
+    "copy": "Copy",
+    "dismiss": "Dismiss",
+    "namePlaceholder": "Key name (optional)",
+    "createKey": "Create Key",
+    "noKeys": "No API keys yet. Create one to get started.",
+    "revoked": "Revoked",
+    "revoke": "Revoke",
+    "usageHint": "Use your API key with the {header} header:",
+    "usageExample": "curl -H \"x-api-key: oa-...\" https://your-api/chat"
+  },
+  "usage": {
+    "title": "Recent Requests",
+    "noRequests": "No requests yet",
+    "time": "Time",
+    "user": "User",
+    "endpoint": "Endpoint",
+    "model": "Model",
+    "duration": "Duration"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文"
+  }
+}

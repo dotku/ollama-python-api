@@ -2,13 +2,14 @@
 
 interface StatusCardProps {
   title: string;
+  className?: string;
   children: React.ReactNode;
 }
 
-export function StatusCard({ title, children }: StatusCardProps) {
+export function StatusCard({ title, className, children }: StatusCardProps) {
   return (
-    <div className="bg-slate-800 rounded-xl p-5 border border-slate-700">
-      <h2 className="text-xs uppercase tracking-wider text-slate-400 mb-3">
+    <div className={`bg-slate-800 rounded-xl p-4 sm:p-5 border border-slate-700 ${className || ""}`}>
+      <h2 className="text-[10px] sm:text-xs uppercase tracking-wider text-slate-400 mb-2 sm:mb-3">
         {title}
       </h2>
       {children}
@@ -18,12 +19,12 @@ export function StatusCard({ title, children }: StatusCardProps) {
 
 export function Stat({ value }: { value: string | number }) {
   return (
-    <div className="text-3xl font-bold text-slate-50">{value}</div>
+    <div className="text-2xl sm:text-3xl font-bold text-slate-50">{value}</div>
   );
 }
 
 export function StatSm({ children }: { children: React.ReactNode }) {
-  return <div className="text-sm text-slate-500 mt-1">{children}</div>;
+  return <div className="text-xs sm:text-sm text-slate-500 mt-1">{children}</div>;
 }
 
 export function Badge({

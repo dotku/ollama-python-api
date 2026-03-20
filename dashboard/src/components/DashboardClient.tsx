@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
+import { useTranslations } from "next-intl";
 import {
   StatusCard,
   Stat,
@@ -11,6 +12,7 @@ import {
 } from "./StatusCard";
 import { UsageTable } from "./UsageTable";
 import { ApiKeyManager } from "./ApiKeyManager";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 interface StatusData {
   server?: { uptime_human: string };
@@ -44,6 +46,7 @@ interface LogEntry {
 
 export function DashboardClient() {
   const { user, isLoading } = useUser();
+  const t = useTranslations();
   const [status, setStatus] = useState<StatusData | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [lastUpdate, setLastUpdate] = useState<string>("");
@@ -72,74 +75,84 @@ export function DashboardClient() {
   }, [refresh]);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-50">
-            Ollama API Dashboard
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Real-time monitoring for your self-hosted Ollama API
-          </p>
+    <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+      {/* Header */}
+      <div className="flex flex-col gap-3 mb-4 sm:mb-6">
+        <div className="flex items-start justify-between">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-semibold text-slate-50 truncate">
+              {t("dashboard.title")}
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              {t("dashboard.subtitle")}
+            </p>
+          </div>
+          <div className="shrink-0 ml-2">
+            <LanguageSwitcher />
+          </div>
         </div>
-        <div className="mt-3 sm:mt-0 flex items-center gap-3">
-          {isLoading ? null : user ? (
-            <>
-              <span className="text-sm text-slate-400">{user.email}</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {isLoading ? null : user ? (
+              <>
+                <span className="text-xs sm:text-sm text-slate-400 truncate max-w-45 sm:max-w-none">
+                  {user.email}
+                </span>
+                <a
+                  href="/auth/logout"
+                  className="text-xs sm:text-sm text-slate-500 hover:text-slate-300 whitespace-nowrap"
+                >
+                  {t("nav.signOut")}
+                </a>
+              </>
+            ) : (
               <a
-                href="/auth/logout"
-                className="text-sm text-slate-500 hover:text-slate-300"
+                href="/auth/login"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-indigo-600 text-white rounded-lg text-xs sm:text-sm hover:bg-indigo-500"
               >
-                Sign out
+                {t("nav.signIn")}
               </a>
-            </>
-          ) : (
-            <a
-              href="/auth/login"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-500"
-            >
-              Sign in
-            </a>
+            )}
+          </div>
+          {lastUpdate && (
+            <p className="text-[10px] sm:text-xs text-slate-600 whitespace-nowrap">
+              {t("dashboard.lastUpdated", { time: lastUpdate })}
+            </p>
           )}
         </div>
       </div>
 
-      {lastUpdate && (
-        <p className="text-xs text-slate-600 text-right mb-4">
-          Last updated: {lastUpdate} (auto-refresh 5s)
-        </p>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        <StatusCard title="Ollama Status">
+      {/* Status Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
+        <StatusCard title={t("status.ollamaStatus")} className="col-span-2 lg:col-span-1">
           {status?.ollama ? (
             <>
               <Badge variant={status.ollama.online ? "green" : "red"}>
-                {status.ollama.online ? "Online" : "Offline"}
+                {status.ollama.online ? t("status.online") : t("status.offline")}
               </Badge>
               <div className="mt-3 flex flex-wrap gap-1">
                 {status.ollama.models.length > 0 ? (
                   status.ollama.models.map((m) => (
                     <span
                       key={m.name}
-                      className="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded-md text-xs"
+                      className="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded-md text-[10px] sm:text-xs"
                     >
                       {m.name} ({m.size_gb}GB)
                     </span>
                   ))
                 ) : (
-                  <span className="text-sm text-slate-500">
-                    No models loaded
+                  <span className="text-xs sm:text-sm text-slate-500">
+                    {t("status.noModels")}
                   </span>
                 )}
               </div>
             </>
           ) : (
-            <Badge variant="yellow">Connecting...</Badge>
+            <Badge variant="yellow">{t("status.connecting")}</Badge>
           )}
         </StatusCard>
 
-        <StatusCard title="Memory">
+        <StatusCard title={t("status.memory")}>
           <Stat value={status?.system ? `${status.system.ram_percent}%` : "-"} />
           <StatSm>
             {status?.system
@@ -149,34 +162,34 @@ export function DashboardClient() {
           <ProgressBar percent={status?.system?.ram_percent || 0} />
         </StatusCard>
 
-        <StatusCard title="CPU">
+        <StatusCard title={t("status.cpu")}>
           <Stat value={status?.system ? `${status.system.cpu_percent}%` : "-"} />
           <ProgressBar percent={status?.system?.cpu_percent || 0} />
         </StatusCard>
 
-        <StatusCard title="Server Uptime">
+        <StatusCard title={t("status.uptime")}>
           <Stat value={status?.server?.uptime_human || "-"} />
         </StatusCard>
 
-        <StatusCard title="Total Requests">
+        <StatusCard title={t("status.totalRequests")}>
           <Stat value={status?.usage?.total_requests ?? "-"} />
           <StatSm>
             {status?.usage
-              ? `${status.usage.active_anonymous_ips} anon IPs · ${status.usage.unique_members} members`
+              ? `${t("status.anonIps", { count: status.usage.active_anonymous_ips })} · ${t("status.members", { count: status.usage.unique_members })}`
               : ""}
           </StatSm>
         </StatusCard>
 
-        <StatusCard title="Rate Limits">
+        <StatusCard title={t("status.rateLimits")}>
           <div className="space-y-1">
-            <div className="text-sm">
-              <span className="text-slate-400">Anonymous:</span>{" "}
+            <div className="text-xs sm:text-sm">
+              <span className="text-slate-400">{t("status.anonymous")}:</span>{" "}
               <span className="text-slate-200">
                 {status?.usage?.anon_rate_limit || "-"}
               </span>
             </div>
-            <div className="text-sm">
-              <span className="text-slate-400">Member:</span>{" "}
+            <div className="text-xs sm:text-sm">
+              <span className="text-slate-400">{t("status.member")}:</span>{" "}
               <span className="text-slate-200">
                 {status?.usage?.member_rate_limit || "-"}
               </span>
@@ -185,12 +198,14 @@ export function DashboardClient() {
         </StatusCard>
       </div>
 
+      {/* API Keys */}
       {user && (
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
           <ApiKeyManager />
         </div>
       )}
 
+      {/* Usage Log */}
       <UsageTable log={log} />
     </div>
   );

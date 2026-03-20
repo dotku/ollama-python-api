@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "title": "Ollama API 管理面板",
+    "description": "监控和管理您的自托管 Ollama API 服务器"
+  },
+  "nav": {
+    "signIn": "登录",
+    "signOut": "退出"
+  },
+  "dashboard": {
+    "title": "Ollama API 管理面板",
+    "subtitle": "实时监控您的自托管 Ollama API",
+    "lastUpdated": "上次更新：{time}（每5秒自动刷新）"
+  },
+  "status": {
+    "ollamaStatus": "Ollama 状态",
+    "online": "在线",
+    "offline": "离线",
+    "connecting": "连接中...",
+    "noModels": "暂无已加载模型",
+    "memory": "内存",
+    "cpu": "CPU",
+    "uptime": "服务器运行时间",
+    "totalRequests": "总请求数",
+    "anonIps": "{count} 个匿名 IP",
+    "members": "{count} 个会员",
+    "rateLimits": "速率限制",
+    "anonymous": "匿名用户",
+    "member": "会员"
+  },
+  "keys": {
+    "title": "API 密钥",
+    "created": "新 API 密钥已创建！请立即复制，之后将无法再次查看。",
+    "copy": "复制",
+    "dismiss": "关闭",
+    "namePlaceholder": "密钥名称（可选）",
+    "createKey": "创建密钥",
+    "noKeys": "暂无 API 密钥，创建一个开始使用。",
+    "revoked": "已撤销",
+    "revoke": "撤销",
+    "usageHint": "使用 {header} 请求头来传递您的 API 密钥：",
+    "usageExample": "curl -H \"x-api-key: oa-...\" https://your-api/chat"
+  },
+  "usage": {
+    "title": "近期请求",
+    "noRequests": "暂无请求记录",
+    "time": "时间",
+    "user": "用户",
+    "endpoint": "端点",
+    "model": "模型",
+    "duration": "耗时"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文"
+  }
+}
