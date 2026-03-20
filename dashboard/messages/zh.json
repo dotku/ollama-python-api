@@ -5,7 +5,10 @@
   },
   "nav": {
     "signIn": "登录",
-    "signOut": "退出"
+    "signOut": "退出",
+    "dashboard": "面板",
+    "chat": "对话",
+    "docs": "文档"
   },
   "dashboard": {
     "title": "Ollama API 管理面板",
@@ -26,7 +29,9 @@
     "members": "{count} 个会员",
     "rateLimits": "速率限制",
     "anonymous": "匿名用户",
-    "member": "会员"
+    "member": "会员",
+    "apiEndpoint": "API 端点",
+    "copied": "已复制！"
   },
   "keys": {
     "title": "API 密钥",
@@ -49,6 +54,40 @@
     "endpoint": "端点",
     "model": "模型",
     "duration": "耗时"
+  },
+  "chat": {
+    "title": "对话",
+    "placeholder": "输入消息...",
+    "send": "发送",
+    "stop": "停止",
+    "selectModel": "选择模型",
+    "noModels": "暂无可用模型",
+    "guest": "访客",
+    "thinking": "思考中...",
+    "clearChat": "清空"
+  },
+  "docs": {
+    "title": "API 文档",
+    "subtitle": "Ollama API 代理的完整参考文档",
+    "baseUrl": "基础 URL",
+    "authentication": "认证方式",
+    "authDesc": "请求可以匿名发起（无需密钥），也可以作为会员（使用 API 密钥）。会员享有更高的速率限制。",
+    "authAnon": "匿名 — 无需请求头，速率限制为 {limit}",
+    "authMember": "会员 — 通过请求头传递 API 密钥，速率限制为 {limit}",
+    "endpoints": "接口列表",
+    "chatEndpoint": "对话（JSON 响应）",
+    "chatStreamEndpoint": "对话（流式响应）",
+    "statusEndpoint": "服务器状态",
+    "usageEndpoint": "使用日志",
+    "keysEndpoint": "API 密钥管理",
+    "request": "请求",
+    "response": "响应",
+    "parameters": "参数",
+    "required": "必需",
+    "optional": "可选",
+    "rateLimits": "速率限制",
+    "rateLimitsDesc": "速率限制按 IP（匿名）或按用户（会员）在滑动窗口内应用。",
+    "errors": "错误码"
   },
   "language": {
     "en": "English",

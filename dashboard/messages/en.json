@@ -5,7 +5,10 @@
   },
   "nav": {
     "signIn": "Sign in",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "dashboard": "Dashboard",
+    "chat": "Chat",
+    "docs": "Docs"
   },
   "dashboard": {
     "title": "Ollama API Dashboard",
@@ -26,7 +29,9 @@
     "members": "{count} members",
     "rateLimits": "Rate Limits",
     "anonymous": "Anonymous",
-    "member": "Member"
+    "member": "Member",
+    "apiEndpoint": "API Endpoint",
+    "copied": "Copied!"
   },
   "keys": {
     "title": "API Keys",
@@ -49,6 +54,40 @@
     "endpoint": "Endpoint",
     "model": "Model",
     "duration": "Duration"
+  },
+  "chat": {
+    "title": "Chat",
+    "placeholder": "Type a message...",
+    "send": "Send",
+    "stop": "Stop",
+    "selectModel": "Select model",
+    "noModels": "No models available",
+    "guest": "Guest",
+    "thinking": "Thinking...",
+    "clearChat": "Clear"
+  },
+  "docs": {
+    "title": "API Documentation",
+    "subtitle": "Complete reference for the Ollama API proxy",
+    "baseUrl": "Base URL",
+    "authentication": "Authentication",
+    "authDesc": "Requests can be made as anonymous (no key) or as a member (with API key). Members get higher rate limits.",
+    "authAnon": "Anonymous — no header needed, rate limited to {limit}",
+    "authMember": "Member — pass your API key via header, rate limited to {limit}",
+    "endpoints": "Endpoints",
+    "chatEndpoint": "Chat (JSON response)",
+    "chatStreamEndpoint": "Chat (Streaming)",
+    "statusEndpoint": "Server Status",
+    "usageEndpoint": "Usage Logs",
+    "keysEndpoint": "API Key Management",
+    "request": "Request",
+    "response": "Response",
+    "parameters": "Parameters",
+    "required": "required",
+    "optional": "optional",
+    "rateLimits": "Rate Limits",
+    "rateLimitsDesc": "Rate limits are applied per IP (anonymous) or per user (member) within a sliding window.",
+    "errors": "Error Codes"
   },
   "language": {
     "en": "English",
