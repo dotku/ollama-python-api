@@ -7,6 +7,7 @@ from collections import defaultdict
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
+from pydantic import BaseModel
 from fastapi import FastAPI, Depends, HTTPException, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
 import requests
@@ -122,13 +123,25 @@ def _validate_api_key(api_key: str) -> dict | None:
     return {"id": row[0], "user_id": row[1], "email": row[2], "name": row[3]}
 
 
+def _extract_api_key(
+    x_api_key: str | None = Header(None),
+    authorization: str | None = Header(None),
+) -> str | None:
+    """Extract API key from X-API-Key header or Authorization: Bearer header."""
+    if x_api_key:
+        return x_api_key
+    if authorization and authorization.startswith("Bearer "):
+        return authorization[7:]
+    return None
+
+
 def get_current_user(
     request: Request,
-    x_api_key: str | None = Header(None),
+    api_key: str | None = Depends(_extract_api_key),
 ) -> dict:
     """Resolve user from API key or treat as anonymous."""
-    if x_api_key:
-        key_info = _validate_api_key(x_api_key)
+    if api_key:
+        key_info = _validate_api_key(api_key)
         if not key_info:
             raise HTTPException(status_code=401, detail="Invalid or revoked API key")
         _check_rate_limit(_member_requests, key_info["user_id"], MEMBER_RATE_LIMIT)
@@ -158,18 +171,23 @@ def root():
     return {"status": "ok"}
 
 
-@app.get("/chat")
-def chat(q: str, request: Request, user: dict = Depends(get_current_user)):
+class ChatRequest(BaseModel):
+    message: str
+    model: str = "smollm:latest"
+
+
+@app.post("/chat")
+def chat(body: ChatRequest, request: Request, user: dict = Depends(get_current_user)):
     start = time.time()
     r = requests.post(
         f"{OLLAMA_BASE}/api/generate",
-        json={"model": "llama3", "prompt": q, "stream": False},
+        json={"model": body.model, "prompt": body.message, "stream": False},
     )
     duration = time.time() - start
     result = r.json()
 
     client_ip = request.client.host if request.client else ""
-    _log_request(user, "/chat", "llama3", duration, client_ip)
+    _log_request(user, "/chat", body.model, duration, client_ip)
 
     return {"user": user["user_id"], "tier": user["tier"], "response": result}
 
