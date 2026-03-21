@@ -145,7 +145,6 @@ def get_current_user(
         key_info = _validate_api_key(api_key)
         if not key_info:
             raise HTTPException(status_code=401, detail="Invalid or revoked API key")
-        _check_rate_limit(_member_requests, key_info["user_id"], MEMBER_RATE_LIMIT)
         return {"tier": "member", "user_id": key_info["user_id"], "api_key_id": key_info["id"], "email": key_info["email"]}
 
     # Anonymous

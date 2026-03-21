@@ -223,7 +223,10 @@ export function DashboardClient() {
 function ApiEndpoint({ apiUrl: apiUrlProp }: { apiUrl?: string }) {
   const t = useTranslations("status");
   const [copied, setCopied] = useState(false);
-  const apiUrl = apiUrlProp || (typeof window !== "undefined" ? window.location.origin : "");
+  const [apiUrl, setApiUrl] = useState("");
+  useEffect(() => {
+    setApiUrl(apiUrlProp || window.location.origin);
+  }, [apiUrlProp]);
 
   const endpoints = [
     { method: "POST", path: "/chat", desc: "Chat (JSON)" },

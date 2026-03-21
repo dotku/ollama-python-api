@@ -77,16 +77,17 @@ function Label({ children }: { children: React.ReactNode }) {
 
 export function DocsClient() {
   const t = useTranslations();
-  const [API_URL, setApiUrl] = useState("");
+  const [API_URL, setApiUrl] = useState("...");
 
   useEffect(() => {
+    const fallback = window.location.origin;
     fetch("/api/status")
       .then((r) => r.json())
       .then((data) => {
-        setApiUrl(data.api_url || window.location.origin);
+        setApiUrl(data.api_url || fallback);
       })
       .catch(() => {
-        setApiUrl(window.location.origin);
+        setApiUrl(fallback);
       });
   }, []);
 
